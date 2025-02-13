@@ -1,0 +1,47 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: spring-boot-admin
+  profiles:
+    include: h2
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  elasticsearch:
+#    uris: http://localhost:9200
+    uris: http://10.57.36.17:9200,http://10.57.36.18:9200,http://10.57.36.19:9200
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  security:
+    user:
+      name: admin
+      password: admin
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.chenpp.deepadmin.auth.entity
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
+
+app:
+  jwt-secret: daf66e01593f61a15b857cf433aae03a005812b31234e149036bcc8dee755dbb
+  jwt-expiration-milliseconds: 604800000
+
+auth.jwt.enabled: true

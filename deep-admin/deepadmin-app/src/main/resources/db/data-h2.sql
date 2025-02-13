@@ -1,0 +1,1 @@
+insert into sys_user(`account`,`password`,`username`) values('admin','$2a$10$1A4w1F0fDFCwZL4zytgbKOFheMTFaN64.hjYNhAGU/e94Fgb/Ozbe','admin')

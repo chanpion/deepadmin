@@ -1,0 +1,68 @@
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+target/
+build/
+
+# Optional npm cache directory
+.npm
+
+# Optional yarn cache directory
+.yarn
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Vue
+/dist/
+/shell/
+/src/.cache/
+/src/.nuxt/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.iml
+*.ipr
+*.iws
+/out/
+/bin/
+/lib/
+/classes/
+*.class
+*.war
+*.ear
+*.jar
+*.log
+*.iml
+*.ipr
+*.iws
+/out/
+/bin/
+/lib/
+/classes/

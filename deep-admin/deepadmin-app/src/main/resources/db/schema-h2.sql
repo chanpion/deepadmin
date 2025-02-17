@@ -6,10 +6,17 @@ CREATE TABLE `sys_user`
     `password`    varchar(64)  DEFAULT NULL COMMENT '密码',
     `icon`        varchar(500) DEFAULT NULL COMMENT '头像',
     `email`       varchar(100) DEFAULT NULL COMMENT '邮箱',
+    `phone`       varchar(100) DEFAULT NULL COMMENT '邮箱',
     `nick_name`   varchar(200) DEFAULT NULL COMMENT '昵称',
     `note`        varchar(500) DEFAULT NULL COMMENT '备注信息',
+    `avatar`      varchar(500) DEFAULT NULL COMMENT '备注信息',
+    `create_by`   varchar(500) DEFAULT NULL COMMENT '创建者',
+    `update_by`   varchar(500) DEFAULT NULL COMMENT '修改者',
     `create_time` datetime     DEFAULT NULL COMMENT '创建时间',
+    `update_time` datetime     DEFAULT NULL COMMENT '创建时间',
+    `expiration`  datetime     DEFAULT NULL COMMENT '创建时间',
     `login_time`  datetime     DEFAULT NULL COMMENT '最后登录时间',
+    `gender`      int          DEFAULT '0' COMMENT '性别 0:未知;1:男;2:女',
     `status`      int          DEFAULT '1' COMMENT '帐号启用状态：0->禁用；1->启用'
 );
 

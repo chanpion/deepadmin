@@ -1,13 +1,17 @@
 package com.chenpp.deepadmin.auth.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
@@ -16,39 +20,58 @@ import java.util.Date;
  */
 @Slf4j
 public class JwtUtil {
-    private static SecretKey key(String secretKey) {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
-    }
+    private static SecretKey key = Jwts.SIG.HS256.key().build();
 
-    public static String generateToken(String username, long expiration, String secretKey) {
-        Date now = new Date();
-        return Jwts.builder()
-                .subject(username)
-                .issuedAt(now)
-                .expiration(new Date(now.getTime() + expiration))
-                .signWith(key(secretKey))
+    public static SecretKey key() {
+        return key;
+    }
+    /**
+     * 生成 JWT token
+     */
+    public static String generateToken(String username, long expiration) {
+        return Jwts.builder().subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key())
                 .compact();
     }
 
-    public static String getUsernameFromToken(String token, String secretKey) {
+    public static String getUsernameFromToken(String token) {
         return Jwts.parser()
-                .verifyWith(key(secretKey))
+                .verifyWith(key())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
     }
 
-    public static boolean validateToken(String token, String secretKey) {
+    public static boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser()
-                    .verifyWith(key(secretKey))
+                    .verifyWith(key())
                     .build()
                     .parseSignedClaims(token);
             return !claims.getPayload().getExpiration().before(new Date());
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: ", e);
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: ", e);
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: ", e);
+        } catch (JwtException | IllegalArgumentException e) {
+            log.error("JWT claims string is empty: ", e);
         } catch (Exception e) {
             log.error("validate token error", e);
-            return false;
         }
+        return false;
+    }
+
+
+    public static String resolveToken(HttpServletRequest req) {
+        String bearerToken = req.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return StringUtils.substringAfter(bearerToken, " ");
+        }
+        return null;
     }
 }

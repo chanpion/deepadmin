@@ -1,12 +1,14 @@
 package com.chenpp.deepadmin.auth.controller;
 
 import com.chenpp.deepadmin.auth.service.AuthService;
+import com.chenpp.deepadmin.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @author April.Chen
@@ -19,15 +21,15 @@ public class AuthController {
     @Resource
     private AuthService authService;
 
-    @PostMapping("/user/login")
-    public ResponseEntity<?> login(String username, String password) {
+    @PostMapping("/auth/login")
+    public Result<?> login(String username, String password) {
         log.info("do login {}", username);
         String token = authService.login(username, password);
-        return ResponseEntity.ok(token);
+        return Result.success(token);
     }
 
-    @PostMapping("/user/logout")
-    public ResponseEntity<?> logout() {
-        return ResponseEntity.ok("logout");
+    @PostMapping("/auth/logout")
+    public Result<?> logout() {
+        return Result.success("logout");
     }
 }

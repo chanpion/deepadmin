@@ -34,6 +34,6 @@ public class AuthServiceImpl implements AuthService {
         log.info("login success");
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return JwtUtil.generateToken(username, jwtProperties.getValidityInMs(), jwtProperties.getSecretKey());
+        return JwtUtil.generateToken(username, jwtProperties.getValidityInMs());
     }
 }

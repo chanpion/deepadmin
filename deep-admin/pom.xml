@@ -12,6 +12,7 @@
     <modules>
         <module>deepadmin-auth</module>
         <module>deepadmin-app</module>
+        <module>deepadmin-common</module>
     </modules>
 
     <properties>

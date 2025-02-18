@@ -1,14 +1,11 @@
 package com.chenpp.deepadmin.auth.security;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,17 +22,12 @@ import java.util.Collections;
  * @author April.Chen
  * @date 2025/2/13 15:06
  */
-//@ConditionalOnProperty(prefix = "auth.jwt", name = "enabled", havingValue = "true")
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
 
     @Resource
     private JwtProperties jwtProperties;
-
-
-    @Resource
-    private JwtTokenProvider jwtTokenProvider;
 
     /**
      * 对密码进行编码
@@ -57,7 +49,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
 //        http.httpBasic().disable()
         // 关闭csrf
         http.csrf().disable()
@@ -66,7 +58,7 @@ public class SecurityConfig {
                 .and()
                 // 设置URL的授权
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/user/login", "/h2-console/**", "/actuator/**").permitAll()
+                .antMatchers("/auth/**", "/user/login", "/h2-console/**", "/actuator/**", "/login", "/logout").permitAll()
                 //hasRole()表示需要指定的角色才能访问资源
                 .antMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/user").hasRole("USER")
@@ -75,9 +67,7 @@ public class SecurityConfig {
                 .and()
                 .formLogin().permitAll().and()
                 .logout().logoutUrl("/user/logout").permitAll().and()
-                .addFilterBefore(new JwtTokenAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-        //应用登录过滤器的配置，配置分离
-//                .apply(new JwtSecurityConfigurer(jwtTokenProvider));
+                .addFilterBefore(new JwtTokenAuthenticationFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class);
 
 
         return http.build();

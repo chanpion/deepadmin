@@ -36,6 +36,9 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * 从 Jwt token 获取用户名
+     */
     public static String getUsernameFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(key())
